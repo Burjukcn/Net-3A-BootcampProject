@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concretes.EntityTypeConfiguration
 {
-
     public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
         public void Configure(EntityTypeBuilder<Employee> builder)

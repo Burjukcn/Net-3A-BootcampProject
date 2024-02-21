@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concretes.EntityTypeConfiguration
 {
+
     public class ApplicantConfiguration : IEntityTypeConfiguration<Applicant>
     {
         public void Configure(EntityTypeBuilder<Applicant> builder)
@@ -18,6 +19,9 @@ namespace DataAccess.Concretes.EntityTypeConfiguration
             builder.Property(x => x.Id).HasColumnName("Id");
 
             builder.Property(x => x.About).HasColumnName("About");
+
+
+
 
         }
     }

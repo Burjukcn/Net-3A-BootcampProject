@@ -1,4 +1,6 @@
-﻿using DataAccess.Concretes.EntityFramework.Contexts;
+﻿using DataAccess.Abstracts;
+using DataAccess.Concretes.EntityFramework.Contexts;
+using DataAccess.Concretes.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +21,10 @@ public static class DataAccessServiceRegistration
             (options => options.UseSqlServer(configuration.
             GetConnectionString("TobetoNet3AConnectionString")));
 
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IApplicantRepository, ApplicantRepository>();
+        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<IInstructorRepository, InstructorRepository>();
         return services;
     }
 }
-

@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace Entities.Concretes;
 
 
-    public class Applicant : User
+public class Applicant : User
+{
+
+    public string About { get; set; }
+    public Applicant()
     {
 
-        public string About { get; set; }
-        public Applicant()
-        {
-
-        }
-
-        public Applicant(string about)
-        {
-
-            About = about;
-        }
     }
+
+    public Applicant(string about)
+    {
+
+        About = about;
+    }
+}
+
