@@ -22,6 +22,163 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Entities.Concretes.Application", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int")
+                        .HasColumnName("ApplicantId");
+
+                    b.Property<int>("ApplicationStateId")
+                        .HasColumnType("int")
+                        .HasColumnName("ApplicationStateId");
+
+                    b.Property<int>("BootcampId")
+                        .HasColumnType("int")
+                        .HasColumnName("BootcampId");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedDate");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletedDate");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.HasIndex("ApplicationStateId");
+
+                    b.HasIndex("BootcampId");
+
+                    b.ToTable("Applications", (string)null);
+                });
+
+            modelBuilder.Entity("Entities.Concretes.ApplicationState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedDate");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Name");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationStates", (string)null);
+                });
+
+            modelBuilder.Entity("Entities.Concretes.Bootcamp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BootcampStateId")
+                        .HasColumnType("int")
+                        .HasColumnName("BootcampStateId");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedDate");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletedDate");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("EndDate");
+
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int")
+                        .HasColumnName("InstructorId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Name");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("StartDate");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BootcampStateId");
+
+                    b.HasIndex("InstructorId");
+
+                    b.ToTable("Bootcamps", (string)null);
+                });
+
+            modelBuilder.Entity("Entities.Concretes.BootcampState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedDate");
+
+                    b.Property<DateTime>("DeletedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DeletedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Name");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BootcampStates", (string)null);
+                });
+
             modelBuilder.Entity("Entities.Concretes.User", b =>
                 {
                     b.Property<int>("Id")
@@ -31,7 +188,7 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("CreatedDate");
 
@@ -39,7 +196,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("DateOfBirth");
 
-                    b.Property<DateTime?>("DeletedDate")
+                    b.Property<DateTime>("DeletedDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("DeletedDate");
 
@@ -68,7 +225,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Password");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("UpdatedDate");
 
@@ -120,6 +277,52 @@ namespace DataAccess.Migrations
                     b.ToTable("Instructors", (string)null);
                 });
 
+            modelBuilder.Entity("Entities.Concretes.Application", b =>
+                {
+                    b.HasOne("Entities.Concretes.Applicant", "Applicant")
+                        .WithMany("Applications")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concretes.ApplicationState", "ApplicationState")
+                        .WithMany("Applications")
+                        .HasForeignKey("ApplicationStateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concretes.Bootcamp", "Bootcamp")
+                        .WithMany("Applications")
+                        .HasForeignKey("BootcampId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+
+                    b.Navigation("ApplicationState");
+
+                    b.Navigation("Bootcamp");
+                });
+
+            modelBuilder.Entity("Entities.Concretes.Bootcamp", b =>
+                {
+                    b.HasOne("Entities.Concretes.BootcampState", "BootcampState")
+                        .WithMany("Bootcamps")
+                        .HasForeignKey("BootcampStateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concretes.Instructor", "Instructor")
+                        .WithMany("Bootcamps")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BootcampState");
+
+                    b.Navigation("Instructor");
+                });
+
             modelBuilder.Entity("Entities.Concretes.Applicant", b =>
                 {
                     b.HasOne("Entities.Concretes.User", null)
@@ -145,6 +348,31 @@ namespace DataAccess.Migrations
                         .HasForeignKey("Entities.Concretes.Instructor", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Entities.Concretes.ApplicationState", b =>
+                {
+                    b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("Entities.Concretes.Bootcamp", b =>
+                {
+                    b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("Entities.Concretes.BootcampState", b =>
+                {
+                    b.Navigation("Bootcamps");
+                });
+
+            modelBuilder.Entity("Entities.Concretes.Applicant", b =>
+                {
+                    b.Navigation("Applications");
+                });
+
+            modelBuilder.Entity("Entities.Concretes.Instructor", b =>
+                {
+                    b.Navigation("Bootcamps");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,17 +8,20 @@ using System.Threading.Tasks;
 namespace Entities.Concretes;
 
 
-public class Instructor : User
-{
-    public string CompanyName { get; set; }
 
-    public Instructor()
+    public class Instructor : User
     {
+        public string CompanyName { get; set; }
 
-    }
+        public ICollection<Bootcamp> Bootcamps { get; set; }
 
-    public Instructor(string companyName)
-    {
-        CompanyName = companyName;
+        public Instructor()
+        {
+            Bootcamps = new HashSet<Bootcamp>();
+        }
+
+        public Instructor(string companyName)
+        {
+            CompanyName = companyName;
+        }
     }
-}

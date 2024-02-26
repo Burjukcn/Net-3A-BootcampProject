@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +14,17 @@ namespace Business
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IApplicantService, ApplicantManager>();
             services.AddScoped<IEmployeeService, EmployeeManager>();
             services.AddScoped<IInstructorService, InstructorManager>();
+            services.AddScoped<IBootcampService, BootcampManager>();
+            services.AddScoped<IBootcampStateService, BootcampStateManager>();
+            services.AddScoped<IApplicationStateService, ApplicationStateManager>();
+            services.AddScoped<IApplicationService, ApplicationManager>();
+
             return services;
         }
     }

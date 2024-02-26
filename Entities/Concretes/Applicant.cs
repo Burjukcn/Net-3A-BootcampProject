@@ -1,25 +1,26 @@
-﻿using System;
+﻿using Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concretes;
-
-
-public class Applicant : User
+namespace Entities.Concretes
 {
-
-    public string About { get; set; }
-    public Applicant()
+    public class Applicant : User
     {
 
-    }
+        public string About { get; set; }
 
-    public Applicant(string about)
-    {
+        public ICollection<Application> Applications { get; set; }
+        public Applicant()
+        {
+            Applications = new HashSet<Application>();
+        }
 
-        About = about;
+        public Applicant(string about)
+        {
+            About = about;
+        }
     }
 }
-

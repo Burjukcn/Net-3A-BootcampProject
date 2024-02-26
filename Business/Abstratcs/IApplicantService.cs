@@ -10,6 +10,7 @@ namespace Business.Abstratcs
 {
     public interface IApplicantService
     {
+
         Task<List<GetAllApplicantResponse>> GetAll();
         Task<GetByIdApplicantResponse> GetById(int id);
         Task<CreateApplicantResponse> AddAsync(CreateApplicantRequest request);

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Business.Requests.Users
 {
-    internal class DeleteUserRequest
+    public class DeleteUserRequest
     {
+        public int Id { get; set; }
     }
 }
