@@ -1,6 +1,8 @@
-﻿using Business.Abstratcs;
+﻿using AutoMapper;
+using Business.Abstratcs;
 using Business.Requests.Applicants;
 using Business.Responses.Applicants;
+using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 using System;

@@ -10,7 +10,7 @@ namespace Business.Responses.Applicants
     {
         public int Id { get; set; }
         public string About { get; set; }
-        public DateTime CreatedDate { get; set; } 
+        public DateTime CreatedDate { get; set; }
 
     }
 }

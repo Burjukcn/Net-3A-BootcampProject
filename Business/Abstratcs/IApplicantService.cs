@@ -1,5 +1,6 @@
 ﻿using Business.Requests.Applicants;
 using Business.Responses.Applicants;
+using Core.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Business.Abstratcs
 {
+
     public interface IApplicantService
     {
 
@@ -17,4 +19,6 @@ namespace Business.Abstratcs
         Task<DeleteApplicantResponse> DeleteAsync(DeleteApplicantRequest request);
         Task<UpdateApplicantResponse> UpdateAsync(UpdateApplicantRequest request);
     }
+
+
 }

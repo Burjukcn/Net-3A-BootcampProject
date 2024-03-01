@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(BaseDbContext))]
-    [Migration("20240223072359_add-migration Create")]
-    partial class addmigrationCreate
+    [Migration("20240228084451_CreateInitial")]
+    partial class CreateInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -285,19 +285,19 @@ namespace DataAccess.Migrations
                     b.HasOne("Entities.Concretes.Applicant", "Applicant")
                         .WithMany("Applications")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concretes.ApplicationState", "ApplicationState")
                         .WithMany("Applications")
                         .HasForeignKey("ApplicationStateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concretes.Bootcamp", "Bootcamp")
                         .WithMany("Applications")
                         .HasForeignKey("BootcampId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Applicant");
@@ -312,13 +312,13 @@ namespace DataAccess.Migrations
                     b.HasOne("Entities.Concretes.BootcampState", "BootcampState")
                         .WithMany("Bootcamps")
                         .HasForeignKey("BootcampStateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concretes.Instructor", "Instructor")
                         .WithMany("Bootcamps")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("BootcampState");

@@ -75,4 +75,4 @@ namespace Business.Concretes
             return new SuccessDataResult<UpdatedBootcampResponse>(response, "Bootcamp succesfully updated!");
         }
     }
-    }
+}

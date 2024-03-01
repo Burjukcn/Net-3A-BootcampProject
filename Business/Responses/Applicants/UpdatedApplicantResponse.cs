@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Business.Responses.Applicants
 {
+
     public class UpdateApplicantResponse
     {
         public int Id { get; set; }
