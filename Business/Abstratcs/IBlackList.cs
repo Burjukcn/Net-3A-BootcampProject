@@ -13,8 +13,9 @@ namespace Business.Abstratcs
     {
         Task<IDataResult<CreatedBlacklistResponse>> AddAsync(CreateBlacklistRequest request);
         Task<IDataResult<UpdatedBlacklistResponse>> UpdateAsync(UpdateBlacklistRequest request);
-        Task<IDataResult<DeletedBlacklistResponse>> DeleteAsync(DeleteBlacklistRequest request);
+        Task<IResult> DeleteAsync(DeleteBlacklistRequest request);
         Task<IDataResult<List<GetAllBlacklistResponse>>> GetAllAsync();
         Task<IDataResult<GetByIdBlacklistResponse>> GetByIdAsync(int id);
+        Task<IDataResult<GetByIdBlacklistResponse>> GetByApplicantIdAsync(int id);
     }
 }

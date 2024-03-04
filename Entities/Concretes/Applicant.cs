@@ -23,5 +23,6 @@ namespace Entities.Concretes
         {
             About = about;
         }
+        
     }
 }

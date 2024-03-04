@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Business.Abstratcs;
+using Business.Constants;
 using Business.Requests.ApplicationStates;
 using Business.Responses.ApplicationStates;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -18,11 +20,14 @@ namespace Business.Concretes
 
         private readonly IApplicationStateRepository _applicationStateRepository;
         private readonly IMapper _mapper;
+        private readonly ApplicationStateBusinessRules _rules;
 
-        public ApplicationStateManager(IApplicationStateRepository applicationRepository, IMapper mapper)
+
+        public ApplicationStateManager(IApplicationStateRepository applicationRepository, IMapper mapper, ApplicationStateBusinessRules rules)
         {
             _applicationStateRepository = applicationRepository;
             _mapper = mapper;
+            _rules = rules;
         }
 
         public async Task<IDataResult<CreatedApplicationStateResponse>> AddAsync(CreateApplicationStateRequest request)
@@ -50,30 +55,26 @@ namespace Business.Concretes
 
         public async Task<IDataResult<GetByIdApplicationStateResponse>> GetByIdAsync(int id)
         {
+            await _rules.CheckIdIfNotExist(id);
+
             var item = await _applicationStateRepository.GetAsync(x => x.Id == id);
 
             GetByIdApplicationStateResponse response = _mapper.Map<GetByIdApplicationStateResponse>(item);
 
-            if (item != null)
-            {
-                return new SuccessDataResult<GetByIdApplicationStateResponse>(response, "Found Succesfully.");
-            }
-            return new ErrorDataResult<GetByIdApplicationStateResponse>("ApplicationState could not be found.");
+            return new SuccessDataResult<GetByIdApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateFound);
+
+
         }
 
         public async Task<IDataResult<UpdatedApplicationStateResponse>> UpdateAsync(UpdateApplicationStateRequest request)
         {
-            var item = await _applicationStateRepository.GetAsync(p => p.Id == request.Id);
-            if (request.Id == 0 || item == null)
-            {
-                return new ErrorDataResult<UpdatedApplicationStateResponse>("ApplicationState could not be found.");
-            }
-
-            _mapper.Map(request, item);
-            await _applicationStateRepository.UpdateAsync(item);
-
-            UpdatedApplicationStateResponse response = _mapper.Map<UpdatedApplicationStateResponse>(item);
-            return new SuccessDataResult<UpdatedApplicationStateResponse>(response, "ApplicationState succesfully updated!");
+           await _rules.CheckIfApplicationStateNotExists(request.Id);
+            await _rules.CheckApplicationStateNameIfExist(request.Name);
+            ApplicationState applicationState = await _applicationStateRepository.GetAsync(x => x.Id == request.Id);
+            _mapper.Map(request, applicationState);
+            await _applicationStateRepository.UpdateAsync(applicationState);
+            UpdatedApplicationStateResponse response = _mapper.Map<UpdatedApplicationStateResponse>(applicationState);
+            return new SuccessDataResult<UpdatedApplicationStateResponse>(response, ApplicationStateMessages.ApplicationStateUpdated);
         }
 
     }

@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Responses.Applicants
+namespace Core.CrossCuttingConcerns
 {
-    public class DeleteApplicantResponse
-
-    {
-        public int Id { get; set; }
-
+    public abstract class BaseBusinessRules
+    { 
 
     }
 }

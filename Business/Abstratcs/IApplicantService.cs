@@ -13,11 +13,11 @@ namespace Business.Abstratcs
     public interface IApplicantService
     {
 
-        Task<List<GetAllApplicantResponse>> GetAll();
-        Task<GetByIdApplicantResponse> GetById(int id);
-        Task<CreateApplicantResponse> AddAsync(CreateApplicantRequest request);
-        Task<DeleteApplicantResponse> DeleteAsync(DeleteApplicantRequest request);
-        Task<UpdateApplicantResponse> UpdateAsync(UpdateApplicantRequest request);
+        Task<IDataResult<CreateApplicantResponse>> AddAsync(CreateApplicantRequest request);
+        Task<IDataResult<UpdateApplicantResponse>> UpdateAsync(UpdateApplicantRequest request);
+        Task<IResult> DeleteAsync(DeleteApplicantRequest request);
+        Task<IDataResult<List<GetAllApplicantResponse>>> GetAllAsync();
+        Task<IDataResult<GetByIdApplicantResponse>> GetByIdAsync(int id);
     }
 
 

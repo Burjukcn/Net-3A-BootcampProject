@@ -22,8 +22,13 @@ public class User : BaseEntity<int>
 
     public string Email { get; set; }
     public string Password { get; set; }
+
+
+
+
     public User()
     {
+
     }
     public User(string userName, string firstName, string lastName, DateTime dateOfBirth, string nationalIdentity, string email, string password)
     {

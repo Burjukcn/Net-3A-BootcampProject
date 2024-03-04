@@ -1,12 +1,11 @@
-﻿using Business.Abstratcs;
-using Business.Concretes;
+﻿using Core.CrossCuttingConcerns;
+using Core.Exceptions;
+using Entities.Concretes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace Business
 {
@@ -16,16 +15,19 @@ namespace Business
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddScoped<IUserService, UserManager>();
-            services.AddScoped<IApplicantService, ApplicantManager>();
-            services.AddScoped<IEmployeeService, EmployeeManager>();
-            services.AddScoped<IInstructorService, InstructorManager>();
-            services.AddScoped<IBootcampService, BootcampManager>();
-            services.AddScoped<IBootcampStateService, BootcampStateManager>();
-            services.AddScoped<IApplicationStateService, ApplicationStateManager>();
-            services.AddScoped<IApplicationService, ApplicationManager>();
-            services.AddScoped<IBlacklistService, BlacklistManager>();
+            services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BaseBusinessRules));
 
+            //services.AddScoped<IUserService, UserManager>();
+            //services.AddScoped<IApplicantService, ApplicantManager>();
+            //services.AddScoped<IEmployeeService, EmployeeManager>();
+            //services.AddScoped<IInstructorService, InstructorManager>();
+            //services.AddScoped<IBootcampService, BootcampManager>();
+            //services.AddScoped<IBootcampStateService, BootcampStateManager>();
+            //services.AddScoped<IApplicationStateService, ApplicationStateManager>();
+            //services.AddScoped<IApplicationService, ApplicationManager>();
+            //services.AddScoped<IBlacklistService, BlacklistManager>();
+
+            services.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.ServiceType.Name.EndsWith("Manager"));
             return services;
         }
     }

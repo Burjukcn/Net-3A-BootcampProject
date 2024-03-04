@@ -30,5 +30,6 @@ namespace Entities.Concretes
             BootcampId = bootcampId;
             ApplicationStateId = applicationStateId;
         }
+
     }
 }

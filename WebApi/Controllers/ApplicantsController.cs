@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ApplicantsController : ControllerBase
+    public class ApplicantsController : BaseController
     {
         private readonly IApplicantService _applicantService;
 
@@ -17,35 +17,34 @@ namespace WebApi.Controllers
             _applicantService = applicantService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("AddAsync")]
+        public async Task<IActionResult> AddAsync(CreateApplicantRequest request)
         {
-            return Ok(await _applicantService.GetAll());
+            return Ok(await _applicantService.AddAsync(request));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("GetAllAsync")]
+        public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _applicantService.GetById(id));
+            return Ok(await _applicantService.GetAllAsync());
         }
 
-        [HttpPost]
-        public async Task<CreateApplicantResponse> AddAsync(CreateApplicantRequest request)
+        [HttpGet("GetByIdAsync")]
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            return await _applicantService.AddAsync(request);
+            return Ok(await _applicantService.GetByIdAsync(id));
         }
 
-        [HttpDelete]
-        public async Task<DeleteApplicantResponse> DeleteAsync(DeleteApplicantRequest request)
+        [HttpDelete("DeleteAsync")]
+        public async Task<IActionResult> DeletedAsync(DeleteApplicantRequest request)
         {
-            return await _applicantService.DeleteAsync(request);
+            return Ok(await _applicantService.DeleteAsync(request));
         }
 
-        [HttpPut]
-        public async Task<UpdateApplicantResponse> UpdateAsync(UpdateApplicantRequest request)
+        [HttpPut("UpdateAsync")]
+        public async Task<IActionResult> UpdateAsync(UpdateApplicantRequest request)
         {
-            return await _applicantService.UpdateAsync(request);
+            return Ok(await _applicantService.UpdateAsync(request));
         }
-
     }
 }
