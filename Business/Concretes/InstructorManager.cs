@@ -4,6 +4,8 @@ using Business.Requests.Employees;
 using Business.Requests.Instructors;
 using Business.Responses.Employees;
 using Business.Responses.Instructors;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -46,6 +48,8 @@ namespace Business.Concretes
             return response;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
+
         public async Task<CreateInstructorResponse> AddAsync(CreateInstructorRequest request)
         {
             Instructor instructor = new();
@@ -66,6 +70,8 @@ namespace Business.Concretes
             return response;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
+
         public async Task<DeleteInstructorResponse> DeleteAsync(DeleteInstructorRequest request)
         {
             Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.Id);
@@ -78,6 +84,8 @@ namespace Business.Concretes
             return response;
         }
 
+
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<UpdateInstructorResponse> UpdateAsync(UpdateInstructorRequest request)
         {
             Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.Id);

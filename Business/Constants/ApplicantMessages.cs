@@ -15,6 +15,7 @@ namespace Business.Constants
         public static string ApplicantListed = "Applicants Listed Successfully";
         public static string ApplicantUpdated = "Applicant Updated Successfully";
         public static string ApplicantFound = "Applicant's ID Found Successfully";
+        public static string ApplicationBlacklisted = "Applicant is blacklisted";
 
     }
 }

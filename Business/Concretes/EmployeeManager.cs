@@ -2,6 +2,8 @@
 using Business.Abstratcs;
 using Business.Requests.Employees;
 using Business.Responses.Employees;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -44,6 +46,8 @@ namespace Business.Concretes
             return response;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
+
         public async Task<CreateEmployeeResponse> AddAsync(CreateEmployeeRequest request)
         {
             Employee employee = new();
@@ -65,6 +69,7 @@ namespace Business.Concretes
             return response;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<DeleteEmployeeResponse> DeleteAsync(DeleteEmployeeRequest request)
         {
             Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.Id);
@@ -77,6 +82,7 @@ namespace Business.Concretes
             return response;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<UpdateEmployeeResponse> UpdateAsync(UpdateEmployeeRequest request)
         {
             Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.Id);

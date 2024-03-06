@@ -1,4 +1,4 @@
-﻿using Core.CrossCuttingConcerns;
+﻿using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions;
 using Entities.Concretes;
 using Microsoft.Extensions.Configuration;

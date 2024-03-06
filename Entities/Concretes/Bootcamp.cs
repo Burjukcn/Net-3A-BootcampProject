@@ -17,5 +17,7 @@ namespace Entities.Concretes
         public virtual Instructor? Instructor { get; set; }
         public virtual ICollection<Application> Applications { get; set; }
         public virtual BootcampState BootcampState { get; set; }
+
+
     }
 }

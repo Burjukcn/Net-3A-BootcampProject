@@ -22,5 +22,11 @@ namespace Entities.Concretes
             Id = id;
             Name = name;
         }
+
+        public BootcampState(string name, ICollection<Bootcamp> bootcamps)
+        {
+            Name = name;
+            Bootcamps = bootcamps;
+        }
     }
 }

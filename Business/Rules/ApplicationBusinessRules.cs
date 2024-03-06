@@ -1,6 +1,6 @@
 ﻿using Business.Abstratcs;
 using Business.Constants;
-using Core.CrossCuttingConcerns;
+using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Business.Rules
         {
             var item = await _blacklistService.GetByApplicantIdAsync(id); if (item.Data != null)
             {
-                throw new BusinessException(ApplicationMessages.ApplicantBlacklisted);
+                throw new BusinessException(ApplicationMessages.ApplicationBlacklisted);
             }
         }
     }

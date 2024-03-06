@@ -1,17 +1,16 @@
-﻿using AutoMapper;
+﻿
+
+using AutoMapper;
 using Business.Abstratcs;
 using Business.Constants;
 using Business.Requests.Blaclists;
 using Business.Responses.Blacklists;
 using Business.Rules;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -29,6 +28,7 @@ namespace Business.Concretes
 
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<CreatedBlacklistResponse>> AddAsync(CreateBlacklistRequest request)
         {
             Blacklist blacklist = _mapper.Map<Blacklist>(request);
@@ -37,6 +37,7 @@ namespace Business.Concretes
             return new SuccessDataResult<CreatedBlacklistResponse>(response, BlacklistMessages.BlacklistAdded);
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IResult> DeleteAsync(DeleteBlacklistRequest request)
         {
             await _rules.CheckIdIfNotExist(request.Id);
@@ -78,7 +79,7 @@ namespace Business.Concretes
 
 
         }
-
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<UpdatedBlacklistResponse>> UpdateAsync(UpdateBlacklistRequest request)
         {
             await _rules.CheckIdIfNotExist(request.Id);

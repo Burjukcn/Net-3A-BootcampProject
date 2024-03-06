@@ -1,17 +1,16 @@
-﻿using AutoMapper;
+﻿
+
+using AutoMapper;
 using Business.Abstratcs;
 using Business.Constants;
 using Business.Requests.ApplicationStates;
 using Business.Responses.ApplicationStates;
 using Business.Rules;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -30,6 +29,7 @@ namespace Business.Concretes
             _rules = rules;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<CreatedApplicationStateResponse>> AddAsync(CreateApplicationStateRequest request)
         {
             ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
@@ -38,6 +38,7 @@ namespace Business.Concretes
             return new SuccessDataResult<CreatedApplicationStateResponse>(response, "Added Successfully");
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<DeletedApplicationStateResponse>> DeleteAsync(DeleteApplicationStateRequest request)
         {
             ApplicationState applicationState = _mapper.Map<ApplicationState>(request);
@@ -66,6 +67,7 @@ namespace Business.Concretes
 
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<UpdatedApplicationStateResponse>> UpdateAsync(UpdateApplicationStateRequest request)
         {
            await _rules.CheckIfApplicationStateNotExists(request.Id);

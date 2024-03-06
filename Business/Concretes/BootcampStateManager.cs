@@ -2,6 +2,8 @@
 using Business.Abstratcs;
 using Business.Requests.BootcampStates;
 using Business.Responses.BootcampStates;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -24,6 +26,7 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<CreatedBootcampStateResponse>> AddAsync(CreateBootcampStateRequest request)
         {
             BootcampState bootcampState = _mapper.Map<BootcampState>(request);
@@ -32,6 +35,7 @@ namespace Business.Concretes
             return new SuccessDataResult<CreatedBootcampStateResponse>(response, "Added Successfully");
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<DeletedBootcampStateResponse>> DeleteAsync(DeleteBootcampStateRequest request)
         {
             BootcampState bootcampState = _mapper.Map<BootcampState>(request);
@@ -60,6 +64,7 @@ namespace Business.Concretes
             return new ErrorDataResult<GetByIdBootcampStateResponse>("BootcampState could not be found.");
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<UpdatedBootcampStateResponse>> UpdateAsync(UpdateBootcampStateRequest request)
         {
             var item = await _bootcampStateRepository.GetAsync(p => p.Id == request.Id);

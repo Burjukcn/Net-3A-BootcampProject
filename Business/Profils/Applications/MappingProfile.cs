@@ -1,14 +1,6 @@
 ﻿using AutoMapper;
-using Business.Requests.ApplicationStates;
-using Business.Responses.ApplicationStates;
 using Entities.Concretes;
-
 using Business.Responses.Applications;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Business.Requests.Applications;
 
 

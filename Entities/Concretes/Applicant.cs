@@ -14,6 +14,7 @@ namespace Entities.Concretes
         public Blacklist Blacklist { get; set; }
 
         public ICollection<Application> Applications { get; set; }
+
         public Applicant()
         {
             Applications = new HashSet<Application>();

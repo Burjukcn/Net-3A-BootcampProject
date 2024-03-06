@@ -1,12 +1,17 @@
-﻿using AutoMapper;
+﻿
+
+
+using AutoMapper;
 using Business.Abstratcs;
+using Business.Constants;
 using Business.Requests.Applicants;
 using Business.Responses.Applicants;
+using Business.Rules;
+using Core.Aspects.Autofac.Logging;
+using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
-using Business.Rules;
-using Business.Constants;
 
 namespace Business.Concretes
 {
@@ -17,6 +22,7 @@ namespace Business.Concretes
         private readonly IMapper _mapper;
         private readonly ApplicantBusinessRules _rules;
 
+        
         public ApplicantManager(IApplicantRepository applicantRepository, IMapper mapper, ApplicantBusinessRules rules)
         {
             _applicantRepository = applicantRepository;
@@ -24,6 +30,7 @@ namespace Business.Concretes
             _rules = rules;
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<List<GetAllApplicantResponse>> GetAll()
         {
             List<GetAllApplicantResponse> applicants = new List<GetAllApplicantResponse>();
@@ -64,6 +71,7 @@ namespace Business.Concretes
             return new SuccessResult(ApplicantMessages.ApplicantDeleted);
         }
 
+        [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<UpdateApplicantResponse>> UpdateAsync(UpdateApplicantRequest request)
         {
             await _rules.CheckIdIfNotExist(request.Id);
