@@ -1,4 +1,4 @@
-﻿using Business.Abstratcs;
+﻿using Business.Abstracts;
 using Business.Constants;
 using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;

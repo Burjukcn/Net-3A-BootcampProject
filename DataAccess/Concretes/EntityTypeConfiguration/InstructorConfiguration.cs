@@ -17,7 +17,7 @@ namespace DataAccess.Concretes.EntityTypeConfiguration
             builder.Property(x => x.Id).HasColumnName("Id");
             builder.Property(x => x.CompanyName).HasColumnName("CompanyName");
 
-            builder.HasMany(x => x.Bootcamps);
+           
         }
     }
 }

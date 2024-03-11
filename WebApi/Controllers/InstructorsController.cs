@@ -1,4 +1,4 @@
-﻿using Business.Abstratcs;
+﻿using Business.Abstracts;
 using Business.Requests.Instructors;
 using Business.Responses.Instructors;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InstructorsController : ControllerBase
+    public class InstructorsController : BaseController
     {
         private readonly IInstructorService _instructorService;
 
@@ -17,34 +17,34 @@ namespace WebApi.Controllers
             _instructorService = instructorService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("AddAsync")]
+        public async Task<IActionResult> AddAsync(CreateInstructorRequest request)
         {
-            return Ok(await _instructorService.GetAll());
+            return Ok(await _instructorService.AddAsync(request));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("GetAllAsync")]
+        public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(await _instructorService.GetById(id));
+            return Ok(await _instructorService.GetAllAsync());
         }
 
-        [HttpPost]
-        public async Task<CreateInstructorResponse> AddAsync(CreateInstructorRequest request)
+        [HttpGet("GetByIdAsync")]
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            return await _instructorService.AddAsync(request);
+            return Ok(await _instructorService.GetByIdAsync(id));
         }
 
-        [HttpDelete]
-        public async Task<DeleteInstructorResponse> DeleteAsync(DeleteInstructorRequest request)
+        [HttpDelete("DeleteAsync")]
+        public async Task<IActionResult> DeletedAsync(DeleteInstructorRequest request)
         {
-            return await _instructorService.DeleteAsync(request);
+            return Ok(await _instructorService.DeleteAsync(request));
         }
 
-        [HttpPut]
-        public async Task<UpdateInstructorResponse> UpdateAsync(UpdateInstructorRequest request)
+        [HttpPut("UpdateAsync")]
+        public async Task<IActionResult> UpdateAsync(UpdateInstructorRequest request)
         {
-            return await _instructorService.UpdateAsync(request);
+            return Ok(await _instructorService.UpdateAsync(request));
         }
     }
 }

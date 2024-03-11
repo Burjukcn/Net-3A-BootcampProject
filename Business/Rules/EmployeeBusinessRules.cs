@@ -1,6 +1,7 @@
 ﻿using Business.Constants;
 using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
+using Core.Utilities.Helpers;
 using DataAccess.Abstracts;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,13 @@ namespace Business.Rules
                 throw new NotFoundException(EmployeeMessages.EmployeeIdCheck);
             }
         }
+
+        public async Task CheckUserNameIfExist(string userName)
+        {
+            var isExists = await _employeeRepository.GetAsync(a => a.UserName == userName);
+            if (isExists is not null)
+                throw new BusinessException(EmployeeMessages.UserNameCheck);
+        }
+
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Business.Constants;
 using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
+using Core.Utilities.Helpers;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,15 @@ namespace Business.Rules
             _instructorRepository = instructorRepository;
         }
 
-     
+        public async Task CheckUserNameIfExist(string userName, int? id)
+        {
+
+            var item = await _instructorRepository.GetAsync(a => a.UserName == userName);
+            if (item != null)
+            {
+                throw new BusinessException(InstructorMessages.UserNameCheck);
+            }
+        }
 
         public async Task CheckIdIfNotExist(int id)
         {

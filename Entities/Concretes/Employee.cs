@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Utilities.Security.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Entities.Concretes;
 public class Employee : User
 {
     public string Position { get; set; }
+
     public Employee()
     {
 

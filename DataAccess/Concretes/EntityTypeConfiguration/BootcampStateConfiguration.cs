@@ -21,7 +21,6 @@ namespace DataAccess.Concretes.EntityTypeConfiguration
             builder.Property(x => x.DeletedDate).HasColumnName("DeletedDate");
 
 
-            builder.HasMany(x => x.Bootcamps);
         }
     }
 }

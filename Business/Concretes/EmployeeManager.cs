@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
-using Business.Abstratcs;
+using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.Employees;
 using Business.Responses.Employees;
+using Business.Rules;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
@@ -18,98 +20,68 @@ namespace Business.Concretes
     public class EmployeeManager : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-
-        public EmployeeManager(IEmployeeRepository employeeRepository)
+        private readonly IMapper _mapper;
+        private readonly EmployeeBusinessRules _rules;
+        public EmployeeManager(IEmployeeRepository employeeRepository, IMapper mapper, EmployeeBusinessRules rules)
         {
             _employeeRepository = employeeRepository;
+            _mapper = mapper;
+            _rules = rules;
         }
-
-        public async Task<List<GetAllEmployeeResponse>> GetAll()
-        {
-            List<GetAllEmployeeResponse> employees = new List<GetAllEmployeeResponse>();
-            foreach (var employee in await _employeeRepository.GetAllAsync())
-            {
-                GetAllEmployeeResponse response = new();
-                response.Id = employee.Id;
-                response.Position = employee.Position;
-                employees.Add(response);
-            }
-            return employees;
-        }
-
-        public async Task<GetByIdEmployeeResponse> GetById(int id)
-        {
-            GetByIdEmployeeResponse response = new();
-            Employee employee = await _employeeRepository.GetAsync(x => x.Id == id);
-            response.Id = employee.Id;
-            response.Position = employee.Position;
-            return response;
-        }
-
         [LogAspect(typeof(MongoDbLogger))]
-
-        public async Task<CreateEmployeeResponse> AddAsync(CreateEmployeeRequest request)
+        public async Task<IDataResult<CreateEmployeeResponse>> AddAsync(CreateEmployeeRequest request)
         {
-            Employee employee = new();
-            employee.UserName = request.UserName;
-            employee.Password = request.Password;
-            employee.Email = request.Email;
-            employee.DateOfBirth = request.DateOfBirth;
-            employee.NationalIdentity = request.NationalIdentity;
-            employee.FirstName = request.FirstName;
-            employee.LastName = request.LastName;
-            employee.Position = request.Position;
+            await _rules.CheckUserNameIfExist(request.UserName);
+
+            Employee employee = _mapper.Map<Employee>(request);
             await _employeeRepository.AddAsync(employee);
-
-            CreateEmployeeResponse response = new();
-            response.Id = employee.Id;
-            response.Position = employee.Position;
-            response.CreatedDate = employee.CreatedDate;
-
-            return response;
+            CreateEmployeeResponse response = _mapper.Map<CreateEmployeeResponse>(employee);
+            return new SuccessDataResult<CreateEmployeeResponse>(response, EmployeeMessages.EmployeeAdded);
         }
-
         [LogAspect(typeof(MongoDbLogger))]
-        public async Task<DeleteEmployeeResponse> DeleteAsync(DeleteEmployeeRequest request)
+        public async Task<IResult> DeleteAsync(DeleteEmployeeRequest request)
         {
-            Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.Id);
-            employee.Id = request.Id;
-            await _employeeRepository.DeleteAsync(employee);
+            await _rules.CheckIdIfNotExist(request.Id);
 
-            DeleteEmployeeResponse response = new DeleteEmployeeResponse();
-            response.Id = employee.Id;
-            response.DeletedDate = employee.DeletedDate;
-            return response;
+            var item = await _employeeRepository.GetAsync(x => x.Id == request.Id);
+            await _employeeRepository.DeleteAsync(item);
+
+            return new SuccessResult(EmployeeMessages.EmployeeDeleted);
         }
 
+        public async Task<IDataResult<List<GetAllEmployeeResponse>>> GetAllAsync()
+        {
+            var list = await _employeeRepository.GetAllAsync();
+            List<GetAllEmployeeResponse> response = _mapper.Map<List<GetAllEmployeeResponse>>(list);
+            return new SuccessDataResult<List<GetAllEmployeeResponse>>(response, EmployeeMessages.EmployeeListed);
+        }
+
+        public async Task<IDataResult<GetByIdEmployeeResponse>> GetByIdAsync(int id)
+        {
+            await _rules.CheckIdIfNotExist(id);
+
+            var item = await _employeeRepository.GetAsync(x => x.Id == id);
+
+            GetByIdEmployeeResponse response = _mapper.Map<GetByIdEmployeeResponse>(item);
+
+            return new SuccessDataResult<GetByIdEmployeeResponse>(response, EmployeeMessages.EmployeeFound);
+
+
+        }
         [LogAspect(typeof(MongoDbLogger))]
-        public async Task<UpdateEmployeeResponse> UpdateAsync(UpdateEmployeeRequest request)
+        public async Task<IDataResult<UpdateEmployeeResponse>> UpdateAsync(UpdateEmployeeRequest request)
         {
-            Employee employee = await _employeeRepository.GetAsync(x => x.Id == request.Id);
-            employee.Id = request.Id;
-            employee.UserName = request.UserName;
-            employee.FirstName = request.FirstName;
-            employee.LastName = request.LastName;
-            employee.DateOfBirth = request.DateOfBirth;
-            employee.Email = request.Email;
-            employee.Password = request.Password;
-            employee.Position = request.Position;
-            employee.NationalIdentity = request.NationalIdentity;
-            await _employeeRepository.UpdateAsync(employee);
+            await _rules.CheckIdIfNotExist(request.Id);
+            await _rules.CheckUserNameIfExist(request.UserName);
+            var item = await _employeeRepository.GetAsync(p => p.Id == request.Id);
 
-            UpdateEmployeeResponse response = new();
-            response.Id = employee.Id;
-            response.Position = employee.Position;
-            response.NationalIdentity = employee.NationalIdentity;
-            response.Email = employee.Email;
-            response.Password = employee.Password;
-            response.DateOfBirth = employee.DateOfBirth;
-            response.UserName = employee.UserName;
-            response.LastName = employee.LastName;
-            response.FirstName = employee.FirstName;
-            response.UpdatedDate = employee.UpdatedDate;
-            return response;
+            _mapper.Map(request, item);
+            await _employeeRepository.UpdateAsync(item);
+
+            UpdateEmployeeResponse response = _mapper.Map<UpdateEmployeeResponse>(item);
+            return new SuccessDataResult<UpdateEmployeeResponse>(response, EmployeeMessages.EmployeeUpdated);
         }
+
     }
 
 }

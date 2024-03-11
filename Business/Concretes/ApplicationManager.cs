@@ -1,7 +1,7 @@
 ﻿
 
 using AutoMapper;
-using Business.Abstratcs;
+using Business.Abstracts;
 using Business.Constants;
 using Business.Requests.Applications;
 using Business.Responses.Applications;
@@ -19,11 +19,14 @@ namespace Business.Concretes
         private readonly IApplicationRepository _applicationRepository;
         private readonly IMapper _mapper;
          private readonly ApplicantBusinessRules _rules;
+        private readonly IBlacklistRepository _blacklistRepository;
 
-        public ApplicationManager(IApplicationRepository applicationRepository, IMapper mapper)
+        public ApplicationManager(IApplicationRepository applicationRepository, IMapper mapper, ApplicantBusinessRules rules, IBlacklistRepository blacklistRepository)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
+            _rules = rules;
+            _blacklistRepository = blacklistRepository;
         }
 
         [LogAspect(typeof(MongoDbLogger))]
@@ -52,7 +55,7 @@ namespace Business.Concretes
         {
             var list = await _applicationRepository.GetAllAsync();
             List<GetAllApplicationResponse> response = _mapper.Map<List<GetAllApplicationResponse>>(list);
-            return new SuccessDataResult<List<GetAllApplicationResponse>>(response, "Listed Successfully");
+            return new SuccessDataResult<List<GetAllApplicationResponse>>(response, ApplicationMessages.ApplicationListed);
         }
 
         public async Task<IDataResult<GetByIdApplicationResponse>> GetByIdAsync(int id)
@@ -66,6 +69,8 @@ namespace Business.Concretes
 
 
         }
+
+        [LogAspect(typeof(MongoDbLogger))]
 
         public async Task<IDataResult<UpdatedApplicationResponse>> UpdateAsync(UpdateApplicationRequest request)
         {

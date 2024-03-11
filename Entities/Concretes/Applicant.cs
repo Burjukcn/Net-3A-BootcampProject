@@ -1,9 +1,5 @@
-﻿using Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Core.Utilities.Security.Entities;
 
 namespace Entities.Concretes
 {
@@ -17,7 +13,7 @@ namespace Entities.Concretes
 
         public Applicant()
         {
-            Applications = new HashSet<Application>();
+           
         }
 
         public Applicant(string about)

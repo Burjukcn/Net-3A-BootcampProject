@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
-using Business.Abstratcs;
+using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.Bootcamps;
 using Business.Responses.Bootcamps;
+using Business.Rules;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,65 +22,65 @@ namespace Business.Concretes
     {
         private readonly IBootcampRepository _bootcampRepository;
         private readonly IMapper _mapper;
+        private readonly BootcampBusinessRules _rules;
 
-        public BootcampManager(IBootcampRepository bootcampRepository, IMapper mapper)
+        public BootcampManager(IBootcampRepository bootcampRepository, IMapper mapper, BootcampBusinessRules rules)
         {
             _bootcampRepository = bootcampRepository;
             _mapper = mapper;
+            _rules = rules;
         }
-
         [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<CreatedBootcampResponse>> AddAsync(CreateBootcampRequest request)
         {
             Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
             await _bootcampRepository.AddAsync(bootcamp);
             CreatedBootcampResponse response = _mapper.Map<CreatedBootcampResponse>(bootcamp);
-            return new SuccessDataResult<CreatedBootcampResponse>(response, "Added Successfully");
+            return new SuccessDataResult<CreatedBootcampResponse>(response, BootcampMessages.BootcampAdded);
         }
-
         [LogAspect(typeof(MongoDbLogger))]
-        public async Task<IDataResult<DeletedBootcampResponse>> DeleteAsync(DeleteBootcampRequest request)
+        public async Task<IResult> DeleteAsync(DeleteBootcampRequest request)
         {
-            Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
-            await _bootcampRepository.DeleteAsync(bootcamp);
-            DeletedBootcampResponse response = _mapper.Map<DeletedBootcampResponse>(bootcamp);
-            return new SuccessDataResult<DeletedBootcampResponse>(response, "Deleted Successfully");
+            await _rules.CheckIdIfNotExist(request.Id);
+
+            var item = await _bootcampRepository.GetAsync(x => x.Id == request.Id);
+            await _bootcampRepository.DeleteAsync(item);
+
+            return new SuccessResult(BootcampMessages.BootcampDeleted);
         }
 
         public async Task<IDataResult<List<GetAllBootcampResponse>>> GetAllAsync()
         {
-            var list = await _bootcampRepository.GetAllAsync();
+            var list = await _bootcampRepository.GetAllAsync(include: x => x.Include(y => y.Instructor).Include(y => y.BootcampState));
             List<GetAllBootcampResponse> response = _mapper.Map<List<GetAllBootcampResponse>>(list);
-            return new SuccessDataResult<List<GetAllBootcampResponse>>(response, "Listed Successfully");
+            return new SuccessDataResult<List<GetAllBootcampResponse>>(response, BootcampMessages.BootcampListed);
         }
 
         public async Task<IDataResult<GetByIdBootcampResponse>> GetByIdAsync(int id)
         {
-            var item = await _bootcampRepository.GetAsync(x => x.Id == id);
+            await _rules.CheckIdIfNotExist(id);
+
+            var item = await _bootcampRepository.GetAsync(x => x.Id == id, include: x => x.Include(y => y.Instructor).Include(y => y.BootcampState));
 
             GetByIdBootcampResponse response = _mapper.Map<GetByIdBootcampResponse>(item);
 
-            if (item != null)
-            {
-                return new SuccessDataResult<GetByIdBootcampResponse>(response, "Found Succesfully.");
-            }
-            return new ErrorDataResult<GetByIdBootcampResponse>("Bootcamp could not be found.");
-        }
+            return new SuccessDataResult<GetByIdBootcampResponse>(response, BootcampMessages.BootcampFound);
 
+        }
         [LogAspect(typeof(MongoDbLogger))]
         public async Task<IDataResult<UpdatedBootcampResponse>> UpdateAsync(UpdateBootcampRequest request)
         {
-            var item = await _bootcampRepository.GetAsync(p => p.Id == request.Id);
-            if (request.Id == 0 || item == null)
-            {
-                return new ErrorDataResult<UpdatedBootcampResponse>("Bootcamp could not be found.");
-            }
+            await _rules.CheckIdIfNotExist(request.Id);
+            var item = await _bootcampRepository.GetAsync(p => p.Id == request.Id, include: x => x.Include(y => y.Instructor).Include(y => y.BootcampState));
+
 
             _mapper.Map(request, item);
             await _bootcampRepository.UpdateAsync(item);
 
             UpdatedBootcampResponse response = _mapper.Map<UpdatedBootcampResponse>(item);
-            return new SuccessDataResult<UpdatedBootcampResponse>(response, "Bootcamp succesfully updated!");
+            return new SuccessDataResult<UpdatedBootcampResponse>(response, BootcampMessages.BootcampUpdated);
         }
+
+
     }
 }

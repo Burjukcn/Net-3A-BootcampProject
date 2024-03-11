@@ -16,15 +16,6 @@ namespace Business.DependencyResolvers.Autofac
         {
 
 
-            // MongoDbLogger için kayıt
-            //builder.RegisterType<MongoDbLogger>().As<LoggerServiceBase>().InstancePerDependency();
-            //builder.Register(c => new ConfigurationBuilder()
-            //        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            //        .Build())
-            //       .As<IConfiguration>()
-            //       .SingleInstance();
-
-
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()

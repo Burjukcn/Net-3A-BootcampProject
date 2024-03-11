@@ -1,4 +1,4 @@
-﻿using Business.Abstratcs;
+﻿using Business.Abstracts;
 using Business.Requests.Bootcamps;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

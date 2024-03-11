@@ -1,9 +1,4 @@
 ﻿using Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entities.Concretes
 {
@@ -23,13 +18,14 @@ namespace Entities.Concretes
 
         }
 
-        public Application(int id, int applicantId, int bootcampId, int applicationStateId)
+        public Application(int applicantId, int bootcampId, int applicationStateId, Bootcamp? bootcamp, Applicant? applicant, ApplicationState? applicationState)
         {
-            Id = id;
             ApplicantId = applicantId;
             BootcampId = bootcampId;
             ApplicationStateId = applicationStateId;
+            Bootcamp = bootcamp;
+            Applicant = applicant;
+            ApplicationState = applicationState;
         }
-
     }
 }

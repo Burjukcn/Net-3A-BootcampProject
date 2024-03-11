@@ -16,11 +16,7 @@ namespace DataAccess.Concretes.EntityTypeConfiguration
         {
 
             builder.ToTable("Applicants");
-            builder.Property(x => x.Id).HasColumnName("Id");
-
             builder.Property(x => x.About).HasColumnName("About");
-
-
             builder.HasMany(p => p.Applications);
             builder.HasOne(p => p.Blacklist);
 

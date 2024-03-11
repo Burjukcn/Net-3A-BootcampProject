@@ -1,7 +1,7 @@
 ﻿
 
 using AutoMapper;
-using Business.Abstratcs;
+using Business.Abstracts;
 using Business.Constants;
 using Business.Requests.Blaclists;
 using Business.Responses.Blacklists;

@@ -1,11 +1,8 @@
-﻿using Entities.Concretes;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Core.Utilities.Security.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+
 
 namespace DataAccess.Concretes.EntityTypeConfiguration
 {
@@ -21,10 +18,13 @@ namespace DataAccess.Concretes.EntityTypeConfiguration
             builder.Property(x => x.DateOfBirth).HasColumnName("DateOfBirth");
             builder.Property(x => x.NationalIdentity).HasColumnName("NationalIdentity");
             builder.Property(x => x.Email).HasColumnName("Email");
-            builder.Property(x => x.Password).HasColumnName("Password");
+            builder.Property(x => x.PasswordHash).HasColumnName("PasswordHash");
+            builder.Property(x => x.PasswordSalt).HasColumnName("PasswordSalt");
             builder.Property(x => x.CreatedDate).HasColumnName("CreatedDate");
             builder.Property(x => x.UpdatedDate).HasColumnName("UpdatedDate");
             builder.Property(x => x.DeletedDate).HasColumnName("DeletedDate");
+
+            builder.HasMany(x => x.UserOperationClaims);
         }
     }
 }

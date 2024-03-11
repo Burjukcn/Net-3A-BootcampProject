@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Utilities.Security.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,14 @@ namespace Entities.Concretes;
 
     public class Instructor : User
     {
+
         public string CompanyName { get; set; }
 
-        public ICollection<Bootcamp> Bootcamps { get; set; }
+       
 
         public Instructor()
         {
-            Bootcamps = new HashSet<Bootcamp>();
+             
         }
 
         public Instructor(string companyName)

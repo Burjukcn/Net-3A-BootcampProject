@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
-using Business.Abstratcs;
+using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.Employees;
 using Business.Requests.Instructors;
 using Business.Responses.Employees;
 using Business.Responses.Instructors;
+using Business.Rules;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
@@ -18,100 +20,74 @@ using System.Threading.Tasks;
 namespace Business.Concretes
 {
     public class InstructorManager : IInstructorService
-
     {
         private readonly IInstructorRepository _instructorRepository;
+        private readonly IMapper _mapper;
+        private readonly InstructorBusinessRules _rules;
 
-        public InstructorManager(IInstructorRepository instructorRepository)
+        public InstructorManager(IInstructorRepository instructorRepository, IMapper mapper, InstructorBusinessRules rules)
         {
             _instructorRepository = instructorRepository;
+            _mapper = mapper;
+            _rules = rules;
         }
-        public async Task<List<GetAllInstructorResponse>> GetAll()
-        {
-            List<GetAllInstructorResponse> instructors = new List<GetAllInstructorResponse>();
-            foreach (var instructor in await _instructorRepository.GetAllAsync())
-            {
-                GetAllInstructorResponse response = new();
-                response.Id = instructor.Id;
-                response.CompanyName = instructor.CompanyName;
-                instructors.Add(response);
-            }
-            return instructors;
-        }
-
-        public async Task<GetByIdInstructorResponse> GetById(int id)
-        {
-            GetByIdInstructorResponse response = new();
-            Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == id);
-            response.Id = instructor.Id;
-            response.CompanyName = instructor.CompanyName;
-            return response;
-        }
-
         [LogAspect(typeof(MongoDbLogger))]
-
-        public async Task<CreateInstructorResponse> AddAsync(CreateInstructorRequest request)
+        public async Task<IDataResult<CreateInstructorResponse>> AddAsync(CreateInstructorRequest request)
         {
-            Instructor instructor = new();
-            instructor.UserName = request.UserName;
-            instructor.Password = request.Password;
-            instructor.Email = request.Email;
-            instructor.DateOfBirth = request.DateOfBirth;
-            instructor.FirstName = request.FirstName;
-            instructor.LastName = request.LastName;
-            instructor.NationalIdentity = request.NationalIdentity;
-            instructor.CompanyName = request.CompanyName;
+            await _rules.CheckUserNameIfExist(request.UserName, null);
+
+            Instructor instructor = _mapper.Map<Instructor>(request);
             await _instructorRepository.AddAsync(instructor);
-
-            CreateInstructorResponse response = new();
-            response.Id = instructor.Id;
-            response.CompanyName = instructor.CompanyName;
-            response.CreatedDate = instructor.CreatedDate;
-            return response;
+            CreateInstructorResponse response = _mapper.Map<CreateInstructorResponse>(instructor);
+            return new SuccessDataResult<CreateInstructorResponse>(response, InstructorMessages.InstructorAdded);
         }
-
         [LogAspect(typeof(MongoDbLogger))]
-
-        public async Task<DeleteInstructorResponse> DeleteAsync(DeleteInstructorRequest request)
+        public async Task<IResult> DeleteAsync(DeleteInstructorRequest request)
         {
-            Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.Id);
-            instructor.Id = request.Id;
-            await _instructorRepository.DeleteAsync(instructor);
+            await _rules.CheckIdIfNotExist(request.Id);
 
-            DeleteInstructorResponse response = new();
-            response.Id = instructor.Id;
-            response.DeletedDate = instructor.DeletedDate;
-            return response;
+            var item = await _instructorRepository.GetAsync(x => x.Id == request.Id);
+            await _instructorRepository.DeleteAsync(item);
+
+            return new SuccessResult(InstructorMessages.InstructorDeleted);
         }
 
+        public async Task<IDataResult<List<GetAllInstructorResponse>>> GetAllAsync()
+        {
+            var list = await _instructorRepository.GetAllAsync();
+            List<GetAllInstructorResponse> response = _mapper.Map<List<GetAllInstructorResponse>>(list);
+            return new SuccessDataResult<List<GetAllInstructorResponse>>(response, InstructorMessages.InstructorListed);
+        }
 
+        public async Task<IDataResult<GetByIdInstructorResponse>> GetByIdAsync(int id)
+        {
+            await _rules.CheckIdIfNotExist(id);
+
+            var item = await _instructorRepository.GetAsync(x => x.Id == id);
+
+            GetByIdInstructorResponse response = _mapper.Map<GetByIdInstructorResponse>(item);
+
+
+            return new SuccessDataResult<GetByIdInstructorResponse>(response, InstructorMessages.InstructorFound);
+
+
+        }
         [LogAspect(typeof(MongoDbLogger))]
-        public async Task<UpdateInstructorResponse> UpdateAsync(UpdateInstructorRequest request)
+        public async Task<IDataResult<UpdateInstructorResponse>> UpdateAsync(UpdateInstructorRequest request)
         {
-            Instructor instructor = await _instructorRepository.GetAsync(x => x.Id == request.Id);
-            instructor.Id = request.Id;
-            instructor.CompanyName = request.CompanyName;
-            instructor.UserName = request.UserName;
-            instructor.LastName = request.LastName;
-            instructor.FirstName = request.FirstName;
-            instructor.DateOfBirth = request.DateOfBirth;
-            instructor.Email = request.Email;
-            instructor.NationalIdentity = request.NationalIdentity;
-            instructor.Password = request.Password;
-            await _instructorRepository.UpdateAsync(instructor);
+            await _rules.CheckIdIfNotExist(request.Id);
+            await _rules.CheckUserNameIfExist(request.UserName, request.Id);
 
-            UpdateInstructorResponse response = new();
-            response.Id = instructor.Id;
-            response.CompanyName = instructor.CompanyName;
-            response.UserName = instructor.UserName;
-            response.Password = instructor.Password;
-            response.NationalIdentity = instructor.NationalIdentity;
-            response.LastName = instructor.LastName;
-            response.FirstName = instructor.FirstName;
-            response.DateOfBirth = instructor.DateOfBirth;
-            response.Email = instructor.Email;
-            response.UpdatedDate = instructor.UpdatedDate;
-            return response;
+            var item = await _instructorRepository.GetAsync(p => p.Id == request.Id);
+
+            _mapper.Map(request, item);
+            await _instructorRepository.UpdateAsync(item);
+
+            UpdateInstructorResponse response = _mapper.Map<UpdateInstructorResponse>(item);
+            return new SuccessDataResult<UpdateInstructorResponse>(response, InstructorMessages.InstructorUpdated);
         }
+
+
     }
+
 }
